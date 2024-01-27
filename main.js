@@ -88,6 +88,9 @@ function loadCoordinates(text) {
         }
     }
     drawLines(points);
+    if (mesh) {
+        mesh.visible = false; // Turn off the mesh initially
+    }
 }
 
 function drawLines(points) {
@@ -147,13 +150,13 @@ document.getElementById('fileDropdown').addEventListener('change', function(even
 
 function loadFile(filePath) {
     // Code to load and process the file
-    // This might involve an AJAX request or other method to retrieve the file content
-    // For example:
     fetch(filePath)
         .then(response => response.text())
-        .then(text => loadCoordinates(text))
+        .then(text => {
+            clearScene(); // Clear the scene before loading new coordinates
+            loadCoordinates(text);
+        })
         .catch(error => console.error('Error loading file:', error));
 }
-
 
 init();
