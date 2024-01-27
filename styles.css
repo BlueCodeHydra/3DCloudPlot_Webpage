@@ -1,0 +1,62 @@
+/* General body styling */
+body { 
+    margin: 0; 
+    color: white; /* Make text color white */
+}
+
+/* Fullscreen canvas for 3D rendering */
+canvas { 
+    display: block; 
+}
+
+/* Control box styling */
+#controlBox {
+    position: absolute; 
+    top: 1vh; 
+    right: 1vh; 
+    z-index: 10; /* z-index doesn't need vh unit */
+    border: 1vh solid white; 
+    background-color: black;
+    padding: 5vh;
+    width: 10%; /* Set width to 10% of the screen */
+}
+
+/* Controls container styling */
+#controls { 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center; 
+}
+
+/* Individual control label styling */
+#controls label { 
+    display: block; 
+    margin: 5vh auto; 
+}
+
+/* Responsive styling for smaller screens */
+@media (max-width: 600px) { /* Changed max-width to a more standard breakpoint */
+    /* Transform control box into a dropdown */
+    #controlBox {
+        position: static;
+        width: 100%;
+        border: none;
+        padding: 0;
+    }
+    #controls {
+        display: none; /* Initially hide controls */
+    }
+    #controls.active {
+        display: flex; /* Show controls when active */
+    }
+    #dropdownToggle {
+        display: block; /* Show the dropdown toggle button */
+        background-color: black;
+        color: white;
+        padding: 10px;
+        text-align: center;
+        border: none;
+        cursor: pointer;
+    }
+}
