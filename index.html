@@ -24,13 +24,30 @@
                 Sphere Color:
                 <input type="color" id="colorPicker" value="#ffffff" />
             </label>
+            <!-- New dropdown for selecting text files -->
+            <label>
+                Select File:
+                <select id="fileDropdown">
+                    <option value="">Select a file...</option>
+                    <option value="3D_Tests/txt/poolTest1.txt">PingPoolTest</option>
+                    <option value="3D_Tests/txt/sphere.txt">sphere</option>
+                    <option value="3D_Tests/txt/saturn.txt">saturn</option>
+                    <!-- Add more options here for each file -->
+                </select>
+            </label>
+            <label>
+                Mesh Color:
+                <input type="color" id="meshColorPicker" value="#ff0000" /> <!-- Default red color -->
+            </label>
+            <button id="toggleMesh">Toggle Mesh</button>
         </div>
     </div>
     <script type="module" src="main.js"></script>
     <script>
         // JavaScript for dropdown functionality
         document.getElementById('dropdownToggle').addEventListener('click', function() {
-            document.getElementById('controls').classList.toggle('active');
+            var controls = document.getElementById('controls');
+            controls.classList.toggle('active');
         });
     </script>
 </body>

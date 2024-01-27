@@ -35,21 +35,19 @@ canvas {
     margin: 5vh auto; 
 }
 
+/* Hide dropdown toggle button by default */
+#dropdownToggle {
+    display: none;
+}
+
 /* Responsive styling for smaller screens */
-@media (max-width: 600px) { /* Changed max-width to a more standard breakpoint */
-    /* Transform control box into a dropdown */
+@media (max-width: 600px) {
+    /* Hide the control box on smaller screens */
     #controlBox {
-        position: static;
-        width: 100%;
-        border: none;
-        padding: 0;
+        display: none;
     }
-    #controls {
-        display: none; /* Initially hide controls */
-    }
-    #controls.active {
-        display: flex; /* Show controls when active */
-    }
+
+    /* Display the dropdown toggle button on smaller screens */
     #dropdownToggle {
         display: block; /* Show the dropdown toggle button */
         background-color: black;
@@ -58,5 +56,17 @@ canvas {
         text-align: center;
         border: none;
         cursor: pointer;
+    }
+
+    /* Initially hide controls, show them when active */
+    #controlBox #controls {
+        display: none; /* Initially hide controls */
+    }
+    #controlBox #controls.active {
+        display: flex; /* Show controls when active */
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin: 5vh auto;
     }
 }

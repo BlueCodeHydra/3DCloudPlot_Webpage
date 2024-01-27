@@ -5,6 +5,7 @@ let scene, camera, renderer, controls, gridHelper;
 let sphereColor = '#ffffff'; // Default color for spheres
 const sphereDiameter = .1; // Universal diameter variable
 let sphereMaterials = []; // Array to keep track of all sphere materials
+let mesh, meshMaterial;
 
 function init() {
     // Create scene, camera, renderer
@@ -33,7 +34,13 @@ function init() {
 
     // Handle window resize
     window.addEventListener('resize', onWindowResize, false);
+    
+    // Initialize mesh material
+    meshMaterial = new THREE.LineBasicMaterial({ color: 0xff0000 }); // Default red color
 
+    // Event listeners for mesh controls
+    document.getElementById('toggleMesh').addEventListener('click', toggleMesh);
+    document.getElementById('meshColorPicker').addEventListener('input', changeMeshColor);
     animate();
 }
 async function handleFileSelect(event) {
@@ -71,12 +78,35 @@ function handleColorChange(event) {
 
 function loadCoordinates(text) {
     const lines = text.split('\n');
+    const points = [];
     for (let line of lines) {
         const parts = line.trim().split(/\s+/);
         if (parts.length === 3) {
             const [x, y, z] = parts.map(Number);
             createSphereWithOutline(x, y, z);
+            points.push(new THREE.Vector3(x, y, z));
         }
+    }
+    drawLines(points);
+}
+
+function drawLines(points) {
+    // Use the global mesh material
+    const geometry = new THREE.BufferGeometry().setFromPoints(points);
+    mesh = new THREE.Line(geometry, meshMaterial);
+    scene.add(mesh);
+}
+
+function toggleMesh() {
+    if (mesh) {
+        mesh.visible = !mesh.visible; // Toggle visibility
+    }
+}
+
+function changeMeshColor(event) {
+    const color = event.target.value;
+    if (meshMaterial) {
+        meshMaterial.color.set(color);
     }
 }
 
@@ -107,5 +137,23 @@ function animate() {
     controls.update();
     renderer.render(scene, camera);
 }
+
+document.getElementById('fileDropdown').addEventListener('change', function(event) {
+    const selectedFile = event.target.value;
+    if (selectedFile) {
+        loadFile(selectedFile);
+    }
+});
+
+function loadFile(filePath) {
+    // Code to load and process the file
+    // This might involve an AJAX request or other method to retrieve the file content
+    // For example:
+    fetch(filePath)
+        .then(response => response.text())
+        .then(text => loadCoordinates(text))
+        .catch(error => console.error('Error loading file:', error));
+}
+
 
 init();
