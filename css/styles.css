@@ -1,0 +1,10 @@
+/* General body styling */
+body { 
+    margin: 0; 
+    color: rgb(0, 0, 0); /* Make text color white */
+}
+
+/* Fullscreen canvas for 3D rendering */
+canvas { 
+    display: block; 
+}

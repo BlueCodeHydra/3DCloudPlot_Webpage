@@ -1,0 +1,116 @@
+body, html {
+    height: 100%;
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+.settings-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    width: 25vh; /* Fixed width for large screens */
+    height: 100%;
+    transform: translateX(-25vh);
+    transition: transform 0.3s ease-in-out;
+    z-index: 1000; /* Ensures the menu stays on top */
+}
+
+.settings-menu.active {
+    transform: translateX(1vh);
+}
+
+.menu-tab {
+    position: absolute;
+    top: 40%; /* Adjusted to center vertically */
+    right: -2.5vh; /* Adjusted for the slant */
+    width: 2vh; /* Width of the tab */
+    height: 8%; /* Relative to viewport height */
+    background-color: #1c1180;
+    color: white;
+    cursor: pointer;
+    text-align: center;
+    
+    /* Create trapezoid shape using clip-path */
+    clip-path: polygon(0 0, 100% 25%, 100% 75%, 0 100%);
+    
+    /* Center the content (icon) */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0; /* Remove padding to let flexbox handle the centering */
+}
+
+.settings-content {
+    padding: 20px;
+}
+
+.close-button {
+    background-color: #444;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.setting {
+    display: flex; /* Enables flexbox layout */
+    justify-content: space-between; /* Spaces the child elements between start and end */
+    align-items: center; /* Aligns items vertically in the center */
+    margin-bottom: 10px;
+    background-color: #222;
+    padding: 10px;
+    color: white;
+}
+
+.setting-name {
+    /* Adjustments for the setting name if necessary */
+    display: flex; /* Enables flexbox layout */
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .setting-name {
+        display: block; /* Stack the name above the input on small screens */
+        margin-right: 0;
+    }
+
+    .setting {
+        flex-direction: column; /* Stack elements vertically on smaller screens */
+    }
+
+
+    .settings-menu.active {
+        transform: translateX(0);
+    }
+
+    .menu-tab {
+        top: 50%; /* Adjust to keep the tab centered */
+        right: -25px; /* Make tab more prominent on small screens */
+        width: 25px;
+        height: 50px; /* Adjust the height of the tab */
+        line-height: 50px; /* Adjust line height to center the icon vertically */
+    }
+
+    .setting-name {
+        display: block; /* Stack the name above the input on small screens */
+        margin-right: 0;
+    }
+
+    .number-input {
+        width: 80px !important; /* Adjusts the width of the number input box, forcing override */
+        height: auto; 
+        margin-left: 2px;
+        margin-right: 2px;
+    }
+        
+    .slider,
+    .checkbox,
+    .select {
+        float: none;
+        display: block;
+        width: 100%; /* Full width inputs on small screens */
+        margin-top: 10px; /* Add some space above the input */
+    }
+}

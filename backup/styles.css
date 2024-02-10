@@ -52,7 +52,7 @@ canvas {
         display: block; /* Show the dropdown toggle button */
         background-color: black;
         color: white;
-        padding: 10px;
+        padding: 1vh;
         text-align: center;
         border: none;
         cursor: pointer;
@@ -63,10 +63,10 @@ canvas {
         display: none; /* Initially hide controls */
     }
     #controlBox #controls.active {
-        display: flex; /* Show controls when active */
+        display: active; /* Show controls when active */
         flex-direction: column;
         justify-content: center;
         align-items: center;
         margin: 5vh auto;
     }
-}
+}  

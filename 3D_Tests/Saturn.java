@@ -24,10 +24,15 @@ public class Saturn {
     public static void main(String[] args) {
         int planetPoints = 500; // Number of points to represent the planet
         int ringPoints = 1000; // Number of points to represent the ring
+        
+        // Parameters for the disk
+        double innerRadius = 1.2; // Just outside the planet's radius
+        double outerRadius = 2.0; // How far the disk extends
+        double diskThickness = 0.05; // Small thickness of the disk
 
         List<Coordinate> saturnCoordinates = new ArrayList<>();
         saturnCoordinates.addAll(generateSphereCoordinates(planetPoints, 1.0)); // radius of the planet
-        saturnCoordinates.addAll(generateTorusCoordinates(ringPoints, 1.5, 0.1)); // outer radius and tube radius of the ring
+        saturnCoordinates.addAll(generateFlatDiskCoordinates(ringPoints, innerRadius, outerRadius, diskThickness));
 
         writeCoordinatesToFile(saturnCoordinates, "txt/saturn.txt");
     }
@@ -47,20 +52,24 @@ public class Saturn {
         return coordinates;
     }
 
-    private static List<Coordinate> generateTorusCoordinates(int points, double outerRadius, double tubeRadius) {
+    private static List<Coordinate> generateFlatDiskCoordinates(int points, double innerRadius, double outerRadius, double thickness) {
         List<Coordinate> coordinates = new ArrayList<>();
-
+    
         for (int i = 0; i < points; i++) {
+            double radius = innerRadius + Math.random() * (outerRadius - innerRadius);
             double theta = Math.random() * 2 * Math.PI;
-            double phi = Math.random() * 2 * Math.PI;
-            double x = (outerRadius + tubeRadius * Math.cos(theta)) * Math.cos(phi);
-            double y = (outerRadius + tubeRadius * Math.cos(theta)) * Math.sin(phi);
-            double z = tubeRadius * Math.sin(theta);
+            double x = radius * Math.cos(theta);
+            double y = radius * Math.sin(theta);
+    
+            // Distribute Z within the range to give a little thickness
+            double z = thickness * (Math.random() - 0.5); // Centered around 0 with given thickness
+    
             coordinates.add(new Coordinate(x, y, z));
         }
-
+    
         return coordinates;
     }
+    
 
     private static void writeCoordinatesToFile(List<Coordinate> coordinates, String filename) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
