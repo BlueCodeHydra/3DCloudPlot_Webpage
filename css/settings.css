@@ -70,7 +70,7 @@ body, html {
 }
 
 .number-input {
-    width: 25px !important; /* Adjusts the width of the number input box, forcing override */
+    width:  30px !important; /* Adjusts the width of the number input box, forcing override */
     height: auto; 
     margin-left: 2px;
     margin-right: 2px;
@@ -78,6 +78,7 @@ body, html {
 
 /*========================================================================*/
 /* File Input button */
+/* Adjusting to target the correct class based on your HTML structure */
 .file-input-hidden {
     width: 0.1px;
     height: 0.1px;
@@ -85,28 +86,29 @@ body, html {
     overflow: hidden;
     position: absolute;
     z-index: -1;
-  }
-  
-  .file-input-label {
+}
+
+.file-upload-btn {
     display: inline-block;
-    padding: 10px 20px;
+    padding: 2px 2px;
     font-size: 14px;
     font-weight: 700;
-    color: white;
+    color: white; /* Default text color */
+    background-color: #222;
+    border-radius: 0; /* Adjust if you want rounded corners */
+    cursor: pointer; /* Changes the cursor to a pointer */
+}
+
+.file-upload-btn:hover {
     background-color: black;
-    border: 2px solid black;
-    border-radius: 0; /* This removes the rounded corners */
-    cursor: pointer;
-  }
-  
-  .file-input-label:hover {
-    background-color: darkgrey;
-  }
-  
-  .fa-upload { /* Assuming you are using FontAwesome */
+    color: white; /* Changes text color to blue on hover */
+    cursor: pointer; /* Ensures cursor changes to a pointer */
+}
+
+.fa-upload { /* Adjusting if you're using FontAwesome for the upload icon */
     margin-right: 5px;
-  }
-  
+}
+
 
 
 /* Responsive Styles */
@@ -119,7 +121,6 @@ body, html {
     .setting {
         flex-direction: column; /* Stack elements vertically on smaller screens */
     }
-
 
     .settings-menu.active {
         transform: translateX(0);

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Settings Menu</title>
+    <title>TEC-V CloudPlot</title>
     <link rel="stylesheet" href="css/settings.css"> 
     <link rel="stylesheet" href="css/styles.css"> 
 
@@ -20,7 +20,7 @@
 
 <div id="settings-menu" class="settings-menu">
     <button id="dropdownToggle" class="menu-tab" onclick="toggleMenu()">☰</button> <!-- Dropdown Toggle Button -->
-    <div class="settings-content" id="controlBox">
+    <div class="settings-content">
         
         <!-- Upload File -->
         <div class="setting">
@@ -45,7 +45,7 @@
         <!-- Sphere Size -->
         <div class="setting">
             <span class="setting-name">Sphere Size</span>
-            <input type="number" class="number-input" step=".1">
+            <input type="number" class="number-input">
         </div>
 
         <!-- Sphere Color -->
@@ -62,14 +62,14 @@
 
         <!-- Toggle Mesh Checkbox -->
         <div class="setting">
+            <label for="toggleMesh">Mesh</label>
             <input type="checkbox" id="toggleMesh" class="checkbox" />
-            <label for="toggleMesh">Toggle Mesh</label>
         </div>
 
         <!-- Toggle Grid Checkbox -->
         <div class="setting">
+            <label for="toggleGrid">Grid</label>
             <input type="checkbox" id="toggleGrid" class="checkbox" />
-            <label for="toggleGrid">Toggle Grid</label>
         </div>
 
         <div class="close-button" onclick="toggleMenu()">Close Controls</div>

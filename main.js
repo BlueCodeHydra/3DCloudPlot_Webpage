@@ -196,7 +196,7 @@ function toggleGrid() {
 
 // Handle Sphere Size Change
 function handleSphereSizeChange(event) {
-    sphereDiameter = parseFloat(event.target.value);
+    sphereDiameter = ((parseFloat(event.target.value)*.005) + .1);
     updateSpheres(); // Implement this function to adjust sphere sizes
 }
 
@@ -212,10 +212,6 @@ function updateSpheres() {
         console.warn("No coordinates loaded previously.");
     }
 }
-
-
-
-
 
 // Drawing Lines between Points
 function drawLines(points) {
