@@ -1,49 +1,37 @@
 import java.io.PrintWriter;
-import java.util.Random;
 
 public class Cave {
 
     public static void main(String[] args) {
-        // Parameters for the cave size
-        int width = 10;
-        int height = 10;
-        int depth = 10;
+        // Parameters for the tube
+        int length = 30; // Length of the tube along the z-axis
+        int radius = 5; // Radius of the tube
 
-        // Create an array to store cave points
-        boolean[][][] cavePoints = new boolean[width][height][depth];
-
-        // Fill the array with noise to simulate a cave structure
-        generateCave(cavePoints);
-
-        // Output the cave coordinates to a text file
-        outputToFile(cavePoints, "cave.txt");
+        // Output the tube coordinates to a text file
+        outputToFile(generateTube(length, radius), "txt/cave.txt");
     }
 
-    private static void generateCave(boolean[][][] cavePoints) {
-        Random random = new Random();
-        // Use a noise function or random generation to determine where the cave exists
-        for (int x = 0; x < cavePoints.length; x++) {
-            for (int y = 0; y < cavePoints[0].length; y++) {
-                for (int z = 0; z < cavePoints[0][0].length; z++) {
-                    // This is a placeholder for a real noise function
-                    cavePoints[x][y][z] = random.nextBoolean();
-                }
+    private static String generateTube(int length, int radius) {
+        StringBuilder coordinates = new StringBuilder();
+
+        for (int z = 0; z < length; z++) {
+            // Loop over 360 degrees to generate the tube's perimeter points for each z level
+            for (int angle = 0; angle < 360; angle++) {
+                double radian = Math.toRadians(angle);
+                // Calculate x and y using the center of the tube as the origin
+                int x = (int) (radius * Math.cos(radian)) + radius; // Center the tube on the x-axis
+                int y = (int) (radius * Math.sin(radian)) + radius; // Center the tube on the y-axis
+
+                // Append the coordinate to the StringBuilder
+                coordinates.append(x).append(" ").append(y).append(" ").append(z).append("\n");
             }
         }
+        return coordinates.toString();
     }
 
-    private static void outputToFile(boolean[][][] cavePoints, String filename) {
+    private static void outputToFile(String coordinates, String filename) {
         try (PrintWriter out = new PrintWriter(filename)) {
-            for (int x = 0; x < cavePoints.length; x++) {
-                for (int y = 0; y < cavePoints[0].length; y++) {
-                    for (int z = 0; z < cavePoints[0][0].length; z++) {
-                        if (cavePoints[x][y][z]) {
-                            // Output the coordinate to the file
-                            out.println(x + " " + y + " " + z);
-                        }
-                    }
-                }
-            }
+            out.print(coordinates);
         } catch (Exception e) {
             e.printStackTrace();
         }

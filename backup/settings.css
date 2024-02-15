@@ -62,13 +62,11 @@ body, html {
     background-color: #222;
     padding: 10px;
     color: white;
-    font-size: 15px;
 }
 
 .setting-name {
     /* Adjustments for the setting name if necessary */
     display: flex; /* Enables flexbox layout */
-    font-size: 15px;
 }
 
 .number-input {
