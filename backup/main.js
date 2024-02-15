@@ -9,6 +9,8 @@ let sphereDiameter = .1; // Universal diameter variable for spheres
 let sphereMaterials = []; // Array to keep track of all sphere materials
 let lastLoadedCoordinates = []; // Stores the last loaded coordinates
 let mesh, meshMaterial;
+let lineObjects = []; // Stores line objects for toggling visibility
+
 
 //=================================================================================================
 // Initialization Function
@@ -57,6 +59,7 @@ function bindEventListeners() {
     document.getElementById('fileDropdown').addEventListener('change', handleDropdownSelect, false);
     document.querySelector('.number-input').addEventListener('input', handleSphereSizeChange, false);
     document.getElementById('colorPicker').addEventListener('input', handleColorChange, false);
+    document.getElementById('toggleLines').addEventListener('change', updateLineVisibility);
     document.getElementById('meshColorPicker').addEventListener('input', changeMeshColor);
     document.getElementById('toggleMesh').addEventListener('click', toggleMesh);
     document.getElementById('toggleGrid').addEventListener('click', toggleGrid);
@@ -111,6 +114,7 @@ function clearScene() {
     while(scene.children.length > 0){ 
         scene.remove(scene.children[0]); 
     }
+    // Re-add the grid to the scene
     scene.add(gridHelper);
 }
 
@@ -139,6 +143,8 @@ function loadCoordinates(text) {
 
     drawLines(points);
     if (mesh) mesh.visible = false;
+
+    connectNearestNeighbors(points);
 }
 
 
@@ -151,6 +157,7 @@ function createSphereWithOutline(x, y, z) {
     sphere.position.set(x, y, z);
     scene.add(sphere);
 
+    // Outline
     const outlineMaterial = new THREE.MeshBasicMaterial({ color: 0x000000, side: THREE.BackSide });
     const outlineMesh = new THREE.Mesh(geometry, outlineMaterial);
     outlineMesh.position.set(x, y, z);
@@ -169,11 +176,22 @@ function handleColorChange(event) {
     sphereMaterials.forEach(material => material.color.set(sphereColor));
 }
 
-// Changing Mesh Color
+// Changing Mesh and Lines Color
 function changeMeshColor(event) {
     const color = event.target.value;
-    if (meshMaterial) meshMaterial.color.set(color);
+    // Update mesh material color
+    if (meshMaterial) {
+        meshMaterial.color.set(color);
+    }
+    // Update line material color
+    lineObjects.forEach(line => {
+        line.material.color.set(color);
+    });
+
+    // This is necessary to see the color change if the lines are already added to the scene
+    renderer.render(scene, camera);
 }
+
 
 //================================
 // Toggle Options 
@@ -213,6 +231,57 @@ function updateSpheres() {
     }
 }
 
+// =========================================
+// Connect nearest Points
+//==========================================
+function connectNearestNeighbors(points) {
+    const lineMaterial = new THREE.LineBasicMaterial({ color: 0x00ff00 });
+
+    points.forEach((point, index) => {
+        let distances = points.map((otherPoint, otherIndex) => {
+            if (index !== otherIndex) {
+                return {
+                    distance: point.distanceTo(otherPoint),
+                    index: otherIndex
+                };
+            } else {
+                return {
+                    distance: Number.MAX_SAFE_INTEGER,
+                    index: otherIndex
+                };
+            }
+        });
+
+        distances.sort((a, b) => a.distance - b.distance);
+        let nearest = distances.slice(0, 8);
+
+        nearest.forEach((neighbor) => {
+            let geometry = new THREE.BufferGeometry().setFromPoints([point, points[neighbor.index]]);
+            let line = new THREE.Line(geometry, lineMaterial);
+            lineObjects.push(line); // Store line for later use
+        });
+    });
+
+    // Now add or remove lines based on checkbox state
+    updateLineVisibility();
+}
+
+function updateLineVisibility() {
+    const showLines = document.getElementById('toggleLines').checked;
+    lineObjects.forEach(line => {
+        if (showLines) {
+            if (!scene.getObjectById(line.id)) {
+                scene.add(line);
+            }
+        } else {
+            if (scene.getObjectById(line.id)) {
+                scene.remove(line);
+            }
+        }
+    });
+}
+
+//=====================================================
 // Drawing Lines between Points
 function drawLines(points) {
     const geometry = new THREE.BufferGeometry().setFromPoints(points);

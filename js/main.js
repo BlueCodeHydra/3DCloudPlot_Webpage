@@ -11,6 +11,8 @@ let lastLoadedCoordinates = []; // Stores the last loaded coordinates
 let mesh, meshMaterial;
 let lineObjects = []; // Stores line objects for toggling visibility
 
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
 
 //=================================================================================================
 // Initialization Function
@@ -63,6 +65,7 @@ function bindEventListeners() {
     document.getElementById('meshColorPicker').addEventListener('input', changeMeshColor);
     document.getElementById('toggleMesh').addEventListener('click', toggleMesh);
     document.getElementById('toggleGrid').addEventListener('click', toggleGrid);
+    document.getElementById('deleteSpheres').addEventListener('click', deleteSelectedSpheres);
 }
 
 //=================================================================================================
@@ -99,6 +102,18 @@ function loadFile(filePath) {
         })
         .catch(error => console.error('Error loading file:', error));
 }
+
+// Mouse Click
+function onMouseClick(event) {
+    // Calculate mouse position in normalized device coordinates (-1 to +1) for both components
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    
+    // Call function to select sphere
+    selectSphere();
+}
+
+window.addEventListener('click', onMouseClick, false);
 
 //=================================================================================================
 // Scene Management
@@ -154,6 +169,7 @@ function createSphereWithOutline(x, y, z) {
     const material = new THREE.MeshBasicMaterial({ color: sphereColor });
     sphereMaterials.push(material);
     const sphere = new THREE.Mesh(geometry, material);
+    sphere.isSphere = true; // Custom property to identify spheres
     sphere.position.set(x, y, z);
     scene.add(sphere);
 
@@ -280,6 +296,43 @@ function updateLineVisibility() {
         }
     });
 }
+//=====================================================
+// Delete Spheres
+//=====================================================
+let selectedSpheres = []; // Stores selected spheres
+
+function selectSphere() {
+    raycaster.setFromCamera(mouse, camera);
+    const intersects = raycaster.intersectObjects(scene.children, true);
+
+    for (let i = 0; i < intersects.length; i++) {
+        if (intersects[i].object.isSphere) {
+            const selectedObject = intersects[i].object;
+
+            // Toggle selection state; change color
+            if (!selectedObject.selected) {
+                selectedObject.material.color.setHex(0xff0000); // Highlight by changing color
+                selectedObject.selected = true;
+                selectedSpheres.push(selectedObject);
+            } else {
+                selectedObject.material.color.set(sphereColor); // Revert to original color
+                selectedObject.selected = false;
+                selectedSpheres = selectedSpheres.filter(obj => obj !== selectedObject);
+            }
+            break; // Assuming you only want to select the first intersected sphere
+        }
+    }
+}
+
+
+function deleteSelectedSpheres() {
+    selectedSpheres.forEach(sphere => {
+        scene.remove(sphere);
+        // If you have them, also remove associated outlines or other related objects
+    });
+    selectedSpheres = []; // Clear the selection list
+}
+
 
 //=====================================================
 // Drawing Lines between Points
