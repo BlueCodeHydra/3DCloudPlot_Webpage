@@ -1,35 +1,31 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>TecV 3D Cloud plot</title>
-    <link rel="stylesheet" href="styles.css">
-    <script type="importmap">
-        {
-            "imports": {
-                "three": "https://unpkg.com/three@0.160.1/build/three.module.js",
-                "three/addons/": "https://unpkg.com/three@0.160.1/examples/jsm/"
+    <head>
+        <title>TecV 3D Cloud plot</title>
+        <link rel="stylesheet" href="css/styles.css">
+        <link rel="stylesheet" href="css/controls.css">
+        
+        <script type="importmap">
+            {
+                "imports": {
+                    "three": "https://unpkg.com/three@0.160.1/build/three.module.js",
+                    "three/addons/": "https://unpkg.com/three@0.160.1/examples/jsm/"
+                }
             }
-        }
-    </script>
-</head>
-<body>
-    <button id="dropdownToggle">Menu</button> <!-- Dropdown Toggle Button -->
+        </script> 
+    </head>
+
+    <body>
+        <button id="dropdownToggle">Menu</button> <!-- Dropdown Toggle Button -->
         <div id="controlBox">
             <div id="controls">
-
                 <!-- Upload File-->
                 <label>
                     Load Coordinates:
                     <input type="file" id="fileInput" accept=".txt" />
                 </label>
-                
-                <!--Sphere Color-->
-                <label>
-                    Sphere Color:
-                    <input type="color" id="colorPicker" value="#ffffff" />
-                </label>
 
-                <!-- New dropdown for selecting text files -->
+                <!-- File Dropdown -->
                 <label>
                     Select File:
                     <select id="fileDropdown">
@@ -41,16 +37,32 @@
                         <!-- Add more options here for each file -->
                     </select>
                 </label>
+                                
+                <!-- Sphere Color -->
+                <label>
+                    Sphere Color:
+                    <input type="color" id="colorPicker" value="#ffffff" />
+                </label>
 
                 <!-- Mesh Color -->
                 <label>
                     Mesh Color:
                     <input type="color" id="meshColorPicker" value="#ff0000" /> <!-- Default red color -->
                 </label>
-                <button id="toggleMesh">Toggle Mesh</button>
-                <button id="connectClosest">Connect Closest Points</button>
+
+                <!-- Toggle Mesh Checkbox -->
+                <div class="control-item">
+                    <input type="checkbox" id="toggleMesh" />
+                    <label for="toggleMesh">Toggle Mesh</label>
+                </div>
+
+                <!-- Toggle Grid Checkbox -->
+                <div class="control-item">
+                    <input type="checkbox" id="toggleGrid" />
+                    <label for="toggleGrid">Toggle Grid</label>
+                </div>
             </div>
         </div>
-    <script type="module" src="main.js"></script>
-</body>
+        <script type="module" src="main.js"></script>             
+    </body>
 </html>

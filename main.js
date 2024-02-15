@@ -5,8 +5,9 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 // Global Variables
 let scene, camera, renderer, controls, gridHelper;
 let sphereColor = '#ffffff'; // Default color for spheres
-const sphereDiameter = .1; // Universal diameter variable for spheres
+let sphereDiameter = .1; // Universal diameter variable for spheres
 let sphereMaterials = []; // Array to keep track of all sphere materials
+let lastLoadedCoordinates = []; // Stores the last loaded coordinates
 let mesh, meshMaterial;
 
 //=================================================================================================
@@ -54,6 +55,7 @@ function bindEventListeners() {
     window.addEventListener('resize', onWindowResize, false);
     document.getElementById('fileInput').addEventListener('change', handleFileSelect, false);
     document.getElementById('fileDropdown').addEventListener('change', handleDropdownSelect, false);
+    document.querySelector('.number-input').addEventListener('input', handleSphereSizeChange, false);
     document.getElementById('colorPicker').addEventListener('input', handleColorChange, false);
     document.getElementById('meshColorPicker').addEventListener('input', changeMeshColor);
     document.getElementById('toggleMesh').addEventListener('click', toggleMesh);
@@ -114,19 +116,31 @@ function clearScene() {
 
 // Coordinate Loading and Mesh Creation
 function loadCoordinates(text) {
-    const lines = text.split('\n');
+    // Parse text only if it's a string, otherwise assume it's already parsed coordinates
+    const lines = typeof text === "string" ? text.split('\n') : text;
     const points = [];
+    lastLoadedCoordinates = []; // Clear previous coordinates
+
     lines.forEach(line => {
-        const parts = line.trim().split(/\s+/);
+        let parts;
+        if (typeof line === "string") {
+            parts = line.trim().split(/\s+/).map(Number);
+        } else {
+            parts = [line.x, line.y, line.z]; // Directly use coordinates if not parsing from text
+        }
+
         if (parts.length === 3) {
-            const [x, y, z] = parts.map(Number);
+            const [x, y, z] = parts;
             createSphereWithOutline(x, y, z);
             points.push(new THREE.Vector3(x, y, z));
+            lastLoadedCoordinates.push({x, y, z}); // Store the parsed coordinates
         }
     });
+
     drawLines(points);
-    if (mesh) mesh.visible = false; // Initially hide mesh
+    if (mesh) mesh.visible = false;
 }
+
 
 // Creating Spheres with Outlines
 function createSphereWithOutline(x, y, z) {
@@ -179,6 +193,29 @@ function toggleGrid() {
 //================================
 // Subfunctions 
 //================================
+
+// Handle Sphere Size Change
+function handleSphereSizeChange(event) {
+    sphereDiameter = parseFloat(event.target.value);
+    updateSpheres(); // Implement this function to adjust sphere sizes
+}
+
+// Implementing updateSpheres function
+function updateSpheres() {
+    // Clear the scene but preserve essential elements like gridHelper
+    clearScene();
+
+    // Reload spheres with updated diameter using stored coordinates
+    if (lastLoadedCoordinates.length > 0) {
+        loadCoordinates(lastLoadedCoordinates);
+    } else {
+        console.warn("No coordinates loaded previously.");
+    }
+}
+
+
+
+
 
 // Drawing Lines between Points
 function drawLines(points) {

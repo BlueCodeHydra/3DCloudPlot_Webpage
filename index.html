@@ -1,67 +1,88 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>TecV 3D Cloud plot</title>
-        <link rel="stylesheet" href="css/styles.css">
-        <link rel="stylesheet" href="css/controls.css">
-        <script type="importmap">
-            {
-                "imports": {
-                    "three": "https://unpkg.com/three@0.160.1/build/three.module.js",
-                    "three/addons/": "https://unpkg.com/three@0.160.1/examples/jsm/"
-                }
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings Menu</title>
+    <link rel="stylesheet" href="css/settings.css"> 
+    <link rel="stylesheet" href="css/styles.css"> 
+
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.1/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.1/examples/jsm/"
             }
-        </script> 
-    </head>
+        }
+    </script>
+</head>
+<body>
 
-    <body>
-        <button id="dropdownToggle">Menu</button> <!-- Dropdown Toggle Button -->
-        <div id="controlBox">
-            <div id="controls">
-                <!-- Upload File-->
-                <label>
-                    Load Coordinates:
-                    <input type="file" id="fileInput" accept=".txt" />
-                </label>
-
-                <!-- File Dropdown -->
-                <label>
-                    Select File:
-                    <select id="fileDropdown">
-                        <option value="">Select a file...</option>
-                        <option value="3D_Tests/txt/poolTest1.txt">PingPoolTest</option>
-                        <option value="3D_Tests/txt/Cave.txt">Cave System</option>
-                        <option value="3D_Tests/txt/sphere.txt">Sphere</option>
-                        <option value="3D_Tests/txt/saturn.txt">Saturn</option>
-                        <!-- Add more options here for each file -->
-                    </select>
-                </label>
-                                
-                <!-- Sphere Color -->
-                <label>
-                    Sphere Color:
-                    <input type="color" id="colorPicker" value="#ffffff" />
-                </label>
-
-                <!-- Mesh Color -->
-                <label>
-                    Mesh Color:
-                    <input type="color" id="meshColorPicker" value="#ff0000" /> <!-- Default red color -->
-                </label>
-
-                <!-- Toggle Mesh Checkbox -->
-                <div class="control-item">
-                    <input type="checkbox" id="toggleMesh" />
-                    <label for="toggleMesh">Toggle Mesh</label>
-                </div>
-
-                <!-- Toggle Grid Checkbox -->
-                <div class="control-item">
-                    <input type="checkbox" id="toggleGrid" />
-                    <label for="toggleGrid">Toggle Grid</label>
-                </div>
-            </div>
+<div id="settings-menu" class="settings-menu">
+    <button id="dropdownToggle" class="menu-tab" onclick="toggleMenu()">☰</button> <!-- Dropdown Toggle Button -->
+    <div class="settings-content" id="controlBox">
+        
+        <!-- Upload File -->
+        <div class="setting">
+            <label for="fileInput" class="file-upload-btn">
+                Load Coordinates: <i class="fa fa-upload"></i>
+            </label>
+            <input type="file" id="fileInput" accept=".txt" class="file-input-hidden"/>
         </div>
-        <script type="module" src="main.js"></script>             
-    </body>
+
+        <!-- Select File -->
+        <div class="setting">
+            <select id="fileDropdown">
+                <option value="">Select a file...</option>
+                <option value="3D_Tests/txt/poolTest1.txt">PingPoolTest</option>
+                <option value="3D_Tests/txt/Cave.txt">Cave System</option>
+                <option value="3D_Tests/txt/sphere.txt">Sphere</option>
+                <option value="3D_Tests/txt/saturn.txt">Saturn</option>
+                <!-- Add more options here for each file -->
+            </select>
+        </div>
+
+        <!-- Sphere Size -->
+        <div class="setting">
+            <span class="setting-name">Sphere Size</span>
+            <input type="number" class="number-input" step=".1">
+        </div>
+
+        <!-- Sphere Color -->
+        <div class="setting">
+            <label for="colorPicker">Sphere Color:</label>
+            <input type="color" id="colorPicker" value="#ffffff" />
+        </div>
+
+        <!-- Mesh Color -->
+        <div class="setting">
+            <label for="meshColorPicker">Mesh Color:</label>
+            <input type="color" id="meshColorPicker" value="#ff0000" /> <!-- Default red color -->
+        </div>
+
+        <!-- Toggle Mesh Checkbox -->
+        <div class="setting">
+            <input type="checkbox" id="toggleMesh" class="checkbox" />
+            <label for="toggleMesh">Toggle Mesh</label>
+        </div>
+
+        <!-- Toggle Grid Checkbox -->
+        <div class="setting">
+            <input type="checkbox" id="toggleGrid" class="checkbox" />
+            <label for="toggleGrid">Toggle Grid</label>
+        </div>
+
+        <div class="close-button" onclick="toggleMenu()">Close Controls</div>
+    </div>
+</div>
+
+<script>
+    function toggleMenu() {
+        var menu = document.getElementById("settings-menu");
+        menu.classList.toggle("active");
+    }
+</script>
+<script type="module" src="main.js"></script>
+
+</body>
 </html>

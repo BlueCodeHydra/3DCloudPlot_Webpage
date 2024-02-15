@@ -23,9 +23,9 @@ body, html {
 .menu-tab {
     position: absolute;
     top: 45%; /* Adjusted to center vertically */
-    right: -2.5vh; /* Adjusted for the slant */
-    width: 2vh; /* Width of the tab */
-    height: 8%; /* Relative to viewport height */
+    right: -6vh; /* Adjusted for the slant */
+    width: 4.5vh; /* Width of the tab */
+    height: 10%; /* Relative to viewport height */
     background-color: #1c1180;
     color: white;
     cursor: pointer;
@@ -128,8 +128,8 @@ body, html {
     .menu-tab {
         top: 45%; /* Adjust to keep the tab centered */
         right: -25px; /* Make tab more prominent on small screens */
-        width: 25px;
-        height: 50px; /* Adjust the height of the tab */
+        width: 30px;
+        height: 60px; /* Adjust the height of the tab */
         line-height: 50px; /* Adjust line height to center the icon vertically */
     }
 
