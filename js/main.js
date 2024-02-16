@@ -66,6 +66,7 @@ function bindEventListeners() {
     document.getElementById('toggleMesh').addEventListener('click', toggleMesh);
     document.getElementById('toggleGrid').addEventListener('click', toggleGrid);
     document.getElementById('deleteSpheres').addEventListener('click', deleteSelectedSpheres);
+    document.getElementById('exportCoordinates').addEventListener('click', exportCoordinates);
 }
 
 //=================================================================================================
@@ -167,7 +168,6 @@ function loadCoordinates(text) {
 function createSphereWithOutline(x, y, z) {
     const geometry = new THREE.SphereGeometry(sphereDiameter / 2, 32, 32);
     const material = new THREE.MeshBasicMaterial({ color: sphereColor });
-    sphereMaterials.push(material);
     const sphere = new THREE.Mesh(geometry, material);
     sphere.isSphere = true; // Custom property to identify spheres
     sphere.position.set(x, y, z);
@@ -179,6 +179,9 @@ function createSphereWithOutline(x, y, z) {
     outlineMesh.position.set(x, y, z);
     outlineMesh.scale.multiplyScalar(1.1);
     scene.add(outlineMesh);
+
+    // Linking sphere and outline for easy access
+    sphere.outlineMesh = outlineMesh;
 }
 
 
@@ -231,7 +234,7 @@ function toggleGrid() {
 // Handle Sphere Size Change
 function handleSphereSizeChange(event) {
     sphereDiameter = ((parseFloat(event.target.value)*.005) + .1);
-    updateSpheres(); // Implement this function to adjust sphere sizes
+    updateSpheres(); // Adjust sphere sizes
 }
 
 // Implementing updateSpheres function
@@ -299,42 +302,94 @@ function updateLineVisibility() {
 //=====================================================
 // Delete Spheres
 //=====================================================
-let selectedSpheres = []; // Stores selected spheres
+let selectedSpheres = []; // Array to keep track of selected spheres
 
 function selectSphere() {
     raycaster.setFromCamera(mouse, camera);
-    const intersects = raycaster.intersectObjects(scene.children, true);
+    const intersects = raycaster.intersectObjects(scene.children);
 
     for (let i = 0; i < intersects.length; i++) {
-        if (intersects[i].object.isSphere) {
-            const selectedObject = intersects[i].object;
+        if (intersects[i].object.isSphere) { // Ensure we're only interacting with spheres
+            const selectedSphere = intersects[i].object;
 
-            // Toggle selection state; change color
-            if (!selectedObject.selected) {
-                selectedObject.material.color.setHex(0xff0000); // Highlight by changing color
-                selectedObject.selected = true;
-                selectedSpheres.push(selectedObject);
+            if (selectedSphere.selected) {
+                // Sphere is already selected, deselect it
+                selectedSphere.material.color.set(sphereColor); // Change color back to default
+                selectedSphere.selected = false;
+
+                // Remove from selectedSpheres array
+                const index = selectedSpheres.indexOf(selectedSphere);
+                if (index > -1) {
+                    selectedSpheres.splice(index, 1);
+                }
             } else {
-                selectedObject.material.color.set(sphereColor); // Revert to original color
-                selectedObject.selected = false;
-                selectedSpheres = selectedSpheres.filter(obj => obj !== selectedObject);
+                // Sphere is not selected, select it
+                selectedSphere.material.color.set(0xff0000); // Highlight color
+                selectedSphere.selected = true;
+
+                // Add to selectedSpheres array
+                selectedSpheres.push(selectedSphere);
             }
-            break; // Assuming you only want to select the first intersected sphere
+
+            break; // Stop the loop after processing the first intersected sphere
         }
     }
 }
 
-
 function deleteSelectedSpheres() {
     selectedSpheres.forEach(sphere => {
+        // Remove sphere and its outline, if any
+        if (sphere.outlineMesh) scene.remove(sphere.outlineMesh);
         scene.remove(sphere);
-        // If you have them, also remove associated outlines or other related objects
+        // Clean up references
+        cleanUpAfterSphereRemoval(sphere);
     });
-    selectedSpheres = []; // Clear the selection list
+
+    selectedSpheres = []; // Clear the selected spheres array
+    updateConnections(); // Update the connections based on remaining spheres
 }
 
 
-//=====================================================
+function cleanUpAfterSphereRemoval(sphere) {
+    // Example: remove the material from the sphereMaterials array
+    const materialIndex = sphereMaterials.indexOf(sphere.material);
+    if (materialIndex !== -1) {
+        sphereMaterials.splice(materialIndex, 1); // Remove the material from the array
+    }
+
+    // If you're tracking spheres in a custom array, remove it from there as well
+    // For example, removing the sphere's coordinates from `lastLoadedCoordinates` if they're directly linked
+    const coordinateIndex = lastLoadedCoordinates.findIndex(coord => 
+        coord.x === sphere.position.x && coord.y === sphere.position.y && coord.z === sphere.position.z);
+    if (coordinateIndex !== -1) {
+        lastLoadedCoordinates.splice(coordinateIndex, 1);
+    }
+}
+
+function updateConnections() {
+    // Clear existing line objects to avoid duplicates
+    lineObjects.forEach(line => scene.remove(line));
+    lineObjects = []; // Reset the line objects array
+
+    const updatedPoints = lastLoadedCoordinates.map(coord => new THREE.Vector3(coord.x, coord.y, coord.z));
+    connectNearestNeighbors(updatedPoints);
+    renderer.render(scene, camera); // Ensure the scene is updated
+}
+
+function exportCoordinates() {
+    const updatedCoordsText = lastLoadedCoordinates.map(coord => `${coord.x} ${coord.y} ${coord.z}`).join('\n');
+    const blob = new Blob([updatedCoordsText], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'updated_coordinates.txt';
+    document.body.appendChild(a); // Append the element to the document
+    a.click(); // Trigger a click on the element to open the download dialog
+    document.body.removeChild(a); // Clean up
+    URL.revokeObjectURL(url); // Release object URL
+}
+
+//========================================================================================
 // Drawing Lines between Points
 function drawLines(points) {
     const geometry = new THREE.BufferGeometry().setFromPoints(points);
