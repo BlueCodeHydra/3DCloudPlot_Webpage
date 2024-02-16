@@ -97,7 +97,6 @@ body, html {
     font-weight: 700;
     color: white; /* Default text color */
     background-color: #222;
-    border-radius: 0; /* Adjust if you want rounded corners */
     cursor: pointer; /* Changes the cursor to a pointer */
 }
 
@@ -111,6 +110,22 @@ body, html {
     margin-right: 5px;
 }
 
+
+.setting > button.upload-btn {
+    /* Apply your specific styles for buttons inside .setting container */
+    width: 100%; /* Make the button expand to the container's width */
+    margin: 5px 0; /* Example margin, adjust to your needs */
+    text-align: center; /* Center the text inside the button */
+    border: none; /* Remove border if not needed */
+    background-color: #4444; /* Example background color, adjust to your needs */
+    color: white; /* Text color */
+    cursor: pointer; /* Change cursor to pointer to indicate it's clickable */
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+
+.setting > button.upload-btn:hover {
+    background-color: #2a2f8d; /* Darken the button on hover */
+}
 
 
 /* Responsive Styles */

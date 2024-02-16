@@ -67,6 +67,7 @@ function bindEventListeners() {
     document.getElementById('toggleGrid').addEventListener('click', toggleGrid);
     document.getElementById('deleteSpheres').addEventListener('click', deleteSelectedSpheres);
     document.getElementById('exportCoordinates').addEventListener('click', exportCoordinates);
+    document.getElementById('clearSceneButton').addEventListener('click', clearScene);
 }
 
 //=================================================================================================
@@ -218,7 +219,25 @@ function changeMeshColor(event) {
 
 // Mesh Visibility
 function toggleMesh() {
-    if (mesh) mesh.visible = !mesh.visible;
+    if (mesh) {
+        mesh.visible = !mesh.visible; // Toggle visibility
+    } else {
+        updateMesh(); // If no mesh exists, create it
+    }
+    renderer.render(scene, camera); // Re-render the scene
+}
+
+function updateMesh() {
+    // Remove the existing mesh if it exists
+    if (mesh) {
+        scene.remove(mesh);
+        mesh.geometry.dispose(); // Optional: Dispose of the geometry to free up memory
+        mesh.material.dispose(); // Optional: Dispose of the material to free up memory
+    }
+
+    // Draw a new mesh based on the updated coordinates
+    const points = lastLoadedCoordinates.map(coord => new THREE.Vector3(coord.x, coord.y, coord.z));
+    drawLines(points); // Reuse your existing function to draw lines
 }
 
 // Grid Visibility
@@ -347,24 +366,16 @@ function deleteSelectedSpheres() {
 
     selectedSpheres = []; // Clear the selected spheres array
     updateConnections(); // Update the connections based on remaining spheres
+    updateMesh(); // Call to update the mesh with remaining spheres
 }
 
 
 function cleanUpAfterSphereRemoval(sphere) {
-    // Example: remove the material from the sphereMaterials array
-    const materialIndex = sphereMaterials.indexOf(sphere.material);
-    if (materialIndex !== -1) {
-        sphereMaterials.splice(materialIndex, 1); // Remove the material from the array
-    }
-
-    // If you're tracking spheres in a custom array, remove it from there as well
-    // For example, removing the sphere's coordinates from `lastLoadedCoordinates` if they're directly linked
-    const coordinateIndex = lastLoadedCoordinates.findIndex(coord => 
-        coord.x === sphere.position.x && coord.y === sphere.position.y && coord.z === sphere.position.z);
-    if (coordinateIndex !== -1) {
-        lastLoadedCoordinates.splice(coordinateIndex, 1);
-    }
+    // Assuming sphere.position uniquely identifies a sphere
+    lastLoadedCoordinates = lastLoadedCoordinates.filter(coord => 
+        !(coord.x === sphere.position.x && coord.y === sphere.position.y && coord.z === sphere.position.z));
 }
+
 
 function updateConnections() {
     // Clear existing line objects to avoid duplicates
@@ -377,17 +388,29 @@ function updateConnections() {
 }
 
 function exportCoordinates() {
+    // Convert the current coordinates to a formatted string
     const updatedCoordsText = lastLoadedCoordinates.map(coord => `${coord.x} ${coord.y} ${coord.z}`).join('\n');
+    
+    // Create a Blob from the string
     const blob = new Blob([updatedCoordsText], { type: 'text/plain' });
+    
+    // Generate a URL for the Blob
     const url = URL.createObjectURL(blob);
+    
+    // Create an anchor (<a>) element to trigger the download
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'updated_coordinates.txt';
-    document.body.appendChild(a); // Append the element to the document
-    a.click(); // Trigger a click on the element to open the download dialog
-    document.body.removeChild(a); // Clean up
-    URL.revokeObjectURL(url); // Release object URL
+    a.download = 'updated_coordinates.txt'; // Set the file name for the download
+    
+    // Trigger the download
+    document.body.appendChild(a); // Append the anchor to the body to make it "clickable"
+    a.click(); // Programmatically click the anchor to trigger the download
+    
+    // Cleanup
+    document.body.removeChild(a); // Remove the anchor from the body
+    URL.revokeObjectURL(url); // Free up the Blob URL
 }
+
 
 //========================================================================================
 // Drawing Lines between Points
