@@ -127,13 +127,28 @@ window.addEventListener('click', onMouseClick, false);
 
 // Clearing the Scene
 function clearScene() {
-    sphereMaterials = [];
-    while(scene.children.length > 0){ 
-        scene.remove(scene.children[0]); 
+    // Remove all objects except the gridHelper
+    for (let i = scene.children.length - 1; i >= 0; i--) {
+        const object = scene.children[i];
+        if (object !== gridHelper) {
+            scene.remove(object);
+
+            if (object.geometry) object.geometry.dispose(); // Dispose geometry
+            if (object.material) object.material.dispose(); // Dispose material
+            if (object.texture) object.texture.dispose(); // Dispose texture
+        }
     }
-    // Re-add the grid to the scene
-    scene.add(gridHelper);
+
+    // Reset data arrays
+    sphereMaterials = [];
+    lastLoadedCoordinates = [];
+    lineObjects = [];
+    mesh = undefined;
+
+    // Re-render the scene to reflect the changes
+    renderer.render(scene, camera);
 }
+
 
 // Coordinate Loading and Mesh Creation
 function loadCoordinates(text) {
@@ -183,7 +198,12 @@ function createSphereWithOutline(x, y, z) {
 
     // Linking sphere and outline for easy access
     sphere.outlineMesh = outlineMesh;
+
+    // Add material to sphereMaterials array
+    sphereMaterials.push(material);
 }
+
+
 
 
 //================================
@@ -193,8 +213,17 @@ function createSphereWithOutline(x, y, z) {
 // Handle Color Changes
 function handleColorChange(event) {
     sphereColor = event.target.value;
-    sphereMaterials.forEach(material => material.color.set(sphereColor));
+
+    // Update materials of all spheres in the scene
+    scene.traverse((object) => {
+        if (object.isSphere) {
+            object.material.color.set(sphereColor);
+        }
+    });
+
+    renderer.render(scene, camera); // Re-render the scene to show the new color
 }
+
 
 // Changing Mesh and Lines Color
 function changeMeshColor(event) {
@@ -219,13 +248,17 @@ function changeMeshColor(event) {
 
 // Mesh Visibility
 function toggleMesh() {
+    // If the mesh exists, toggle its visibility
     if (mesh) {
-        mesh.visible = !mesh.visible; // Toggle visibility
+        mesh.visible = !mesh.visible;
     } else {
-        updateMesh(); // If no mesh exists, create it
+        // If the mesh doesn't exist, create it and set it to visible
+        updateMesh();
+        if (mesh) mesh.visible = true;
     }
     renderer.render(scene, camera); // Re-render the scene
 }
+
 
 function updateMesh() {
     // Remove the existing mesh if it exists
@@ -245,28 +278,34 @@ function toggleGrid() {
     if (gridHelper) gridHelper.visible = !gridHelper.visible;
 }
 
-
 //================================
 // Subfunctions 
 //================================
 
 // Handle Sphere Size Change
 function handleSphereSizeChange(event) {
-    sphereDiameter = ((parseFloat(event.target.value)*.005) + .1);
+    sphereDiameter = ((parseFloat(event.target.value) * .005) + .1);
     updateSpheres(); // Adjust sphere sizes
 }
 
-// Implementing updateSpheres function
 function updateSpheres() {
-    // Clear the scene but preserve essential elements like gridHelper
-    clearScene();
+    // Create a new geometry with the updated diameter for spheres
+    const newSphereGeometry = new THREE.SphereGeometry(sphereDiameter / 2, 32, 32);
 
-    // Reload spheres with updated diameter using stored coordinates
-    if (lastLoadedCoordinates.length > 0) {
-        loadCoordinates(lastLoadedCoordinates);
-    } else {
-        console.warn("No coordinates loaded previously.");
-    }
+    // Update each sphere and its outline in the scene with the new geometry and scale
+    scene.traverse((object) => {
+        if (object.isSphere) {
+            object.geometry.dispose(); // Dispose of the old sphere geometry
+            object.geometry = newSphereGeometry; // Assign the new sphere geometry
+
+            // Update the scale of the outline mesh if it exists
+            if (object.outlineMesh) {
+                object.outlineMesh.geometry.dispose(); // Dispose of the old outline geometry
+                object.outlineMesh.geometry = newSphereGeometry.clone(); // Assign a clone of the new geometry to the outline
+                object.outlineMesh.scale.set(1.1, 1.1, 1.1); // Adjust the scale to be slightly larger than the sphere
+            }
+        }
+    });
 }
 
 // =========================================
@@ -366,7 +405,11 @@ function deleteSelectedSpheres() {
 
     selectedSpheres = []; // Clear the selected spheres array
     updateConnections(); // Update the connections based on remaining spheres
-    updateMesh(); // Call to update the mesh with remaining spheres
+    
+    // Update the mesh only if it is currently visible
+    if (mesh && mesh.visible) {
+        updateMesh(); // Call to update the mesh with remaining spheres
+    }
 }
 
 
