@@ -205,7 +205,6 @@ function createSphereWithOutline(x, y, z) {
 
 
 
-
 //================================
 // Color Changes
 //================================
