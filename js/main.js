@@ -258,7 +258,6 @@ function toggleMesh() {
     renderer.render(scene, camera); // Re-render the scene
 }
 
-
 function updateMesh() {
     // Remove the existing mesh if it exists
     if (mesh) {
