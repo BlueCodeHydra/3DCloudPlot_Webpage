@@ -68,6 +68,11 @@ function bindEventListeners() {
     document.getElementById('deleteSpheres').addEventListener('click', deleteSelectedSpheres);
     document.getElementById('exportCoordinates').addEventListener('click', exportCoordinates);
     document.getElementById('clearSceneButton').addEventListener('click', clearScene);
+
+    // Mouse Positions - Delete Spheres
+    window.addEventListener('resize', onWindowResize, false);
+    window.addEventListener('keydown', onKeyPress, false);
+    document.addEventListener('keydown', toggleControls, false); // Listen for 'keydown' to toggle controls
 }
 
 //=================================================================================================
@@ -473,6 +478,33 @@ function animate() {
     requestAnimationFrame(animate);
     controls.update();
     renderer.render(scene, camera);
+}
+
+//==========================================================
+// DELETE SPHERES
+//==========================================================
+// Assume controls is your OrbitControls instance
+let controlsEnabled = true; // Initial state of controls
+let qKeyPressed = false; // Add this line at the top of your script
+
+function onKeyPress(event) {
+    // Check if 'Q' is pressed
+    if (event.key === 'q' || event.key === 'Q') {
+        qKeyPressed = true;
+    }
+}
+
+function onKeyRelease(event) {
+    if (event.key === 'q' || event.key === 'Q') {
+        qKeyPressed = false;
+    }
+}
+
+function toggleControls(event) {
+    if (event.key === 'q' || event.key === 'Q') {
+        controlsEnabled = !controlsEnabled; // Toggle the state
+        controls.enabled = controlsEnabled; // Apply the state to the OrbitControls
+    }
 }
 
 // Initiating the Visualization

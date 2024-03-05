@@ -35,9 +35,11 @@
             <select id="fileDropdown">
                 <option value="">Select a file...</option>
                 <option value="3D_Tests\txt\poolTest1.txt">PingPoolTest</option>
-                <option value="3D_Tests\txt\cave.txt">Cave System</option>
+                <option value="3D_Tests\txt\CleardPoolTest.txt">ClearedPingPoolTest</option>
                 <option value="3D_Tests/txt/sphere.txt">Sphere</option>
                 <option value="3D_Tests/txt/saturn.txt">Saturn</option>
+                <option value="3D_Tests/txt/bunny.txt">Bunny</option>
+                <option value="3D_Tests/txt/chopper.txt">Chopper</option>
                 <!-- Add more options here for each file -->
             </select>
         </div>
@@ -76,9 +78,26 @@
         <!-- Toggle Grid Checkbox -->
         <div class="setting">
             <label for="toggleGrid">Grid</label>
-            <input type="checkbox" id="toggleGrid" class="checkbox" />
+            <input type="checkbox" id="toggleGrid" class="checkbox" checked/>
+        </div>
+        
+        <!-- New Button for Deleting Selected Spheres -->
+        <div class="setting">
+            <button id="deleteSpheres" class="upload-btn">Delete Selected Spheres</button>
         </div>
 
+        <!-- Export Updated Coordinates -->
+        <div class="setting">
+            <button id="exportCoordinates" class="upload-btn">Export Updated Coordinates</button>
+        </div>  
+
+        <!-- Clear Screen -->
+        <div class="setting">
+            <button id="clearSceneButton" class="upload-btn">Clear Screen</button>
+        </div> 
+
+        
+        <!-- Close Button-->
         <div class="close-button" onclick="toggleMenu()">Close Controls</div>
     </div>
 </div>

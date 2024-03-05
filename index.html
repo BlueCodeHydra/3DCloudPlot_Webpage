@@ -43,44 +43,7 @@
                 <!-- Add more options here for each file -->
             </select>
         </div>
-
-        <!-- Sphere Size -->
-        <div class="setting">
-            <span class="setting-name">Sphere Size</span>
-            <input type="number" class="number-input">
-        </div>
-
-        <!-- Sphere Color -->
-        <div class="setting">
-            <label for="colorPicker">Sphere Color:</label>
-            <input type="color" id="colorPicker" value="#ffffff" />
-        </div>
-
-        <!-- Mesh Color -->
-        <div class="setting">
-            <label for="meshColorPicker">Mesh Color:</label>
-            <input type="color" id="meshColorPicker" value="#ff0000" /> <!-- Default red color -->
-        </div>
-
-        <!-- Toggle Nearest Neighbors Lines Checkbox -->
-        <div class="setting">
-            <label for="toggleLines">Closest Points</label>
-            <input type="checkbox" id="toggleLines" class="checkbox" />
-        </div>
-
-
-        <!-- Toggle Mesh Checkbox -->
-        <div class="setting">
-            <label for="toggleMesh">Connected Points</label>
-            <input type="checkbox" id="toggleMesh" class="checkbox" />
-        </div>
-
-        <!-- Toggle Grid Checkbox -->
-        <div class="setting">
-            <label for="toggleGrid">Grid</label>
-            <input type="checkbox" id="toggleGrid" class="checkbox" checked/>
-        </div>
-        
+       
         <!-- New Button for Deleting Selected Spheres -->
         <div class="setting">
             <button id="deleteSpheres" class="upload-btn">Delete Selected Spheres</button>
@@ -102,11 +65,63 @@
     </div>
 </div>
 
+<div id="settings-menu-right" class="settings-menu right">
+    <button id="dropdownToggleRight" class="menu-tab right" onclick="toggleMenuRight()">☰</button>
+    <!-- Settings content for the right-side menu -->
+    <div class="settings-content">
+        <!-- Sphere Size -->
+        <div class="setting">
+            <span class="setting-name">Sphere Size</span>
+            <input type="number" class="number-input">
+        </div>
+
+        <!-- Toggle Nearest Neighbors Lines Checkbox -->
+        <div class="setting">
+            <span class = "setting-name">Closest Points</span>
+            <input type="checkbox" id="toggleLines" class="checkbox" />
+        </div>
+
+        <!-- Toggle Mesh Checkbox -->
+        <div class="setting">
+            <label for="toggleMesh">Connected Points</label>
+            <input type="checkbox" id="toggleMesh" class="checkbox" />
+        </div>
+
+        <!-- Toggle Grid Checkbox -->
+        <div class="setting">
+            <label for="toggleGrid">Grid</label>
+            <input type="checkbox" id="toggleGrid" class="checkbox" checked/>
+        </div>
+
+        <!-- Sphere Color -->
+        <div class="setting">
+            <label for="colorPicker">Sphere Color:</label>
+            <input type="color" id="colorPicker" value="#ffffff" />
+        </div>
+
+        <!-- Mesh Color -->
+        <div class="setting">
+            <label for="meshColorPicker">Mesh Color:</label>
+            <input type="color" id="meshColorPicker" value="#ff0000" /> <!-- Default red color -->
+        </div>
+
+        <!-- Close Button-->
+        <div class="close-button" onclick="toggleMenuRight()">Close Controls</div>
+    </div>
+</div>
+
+
 <script>
     function toggleMenu() {
         var menu = document.getElementById("settings-menu");
         menu.classList.toggle("active");
     }
+
+    function toggleMenuRight() {
+        var menuRight = document.getElementById("settings-menu-right");
+        menuRight.classList.toggle("active");
+    }
+
 </script>
 <script type="module" src="js\main.js"></script>
 

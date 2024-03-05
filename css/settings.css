@@ -128,6 +128,72 @@ body, html {
 }
 
 
+.settings-menu.right {
+    left: auto; /* Override the left positioning */
+    right: 0; /* Position to the right */
+    transform: translateX(30vh); /* Start hidden to the right */
+}
+
+.settings-menu.right.active {
+    transform: translateX(-1vh); /* Adjust based on your design */
+}
+
+.menu-tab.right {
+    position: absolute;
+    top: 45%; /* Adjusted to center vertically */
+    right: 32vh; /* Adjusted for the slant */
+    width: 4.5vh; /* Width of the tab */
+    height: 10%; /* Relative to viewport height */
+    background-color: white;
+    color: black;
+    cursor: pointer;
+    text-align: center;
+    
+    /* Mirror the trapezoid shape using clip-path for the right side */
+    clip-path: polygon(100% 0, 0 25%, 0 75%, 100% 100%);
+}
+
+
+/* Apply custom styles to the select element */
+#fileDropdown {
+    background-color: #222; /* Match the background color */
+    color: white; /* Match the text color */
+    padding: 10px; /* Match the padding */
+    border: none; /* Remove the default border */
+    font-size: 15px; /* Match the font size */
+    outline: none; /* Remove the focus outline */
+    -webkit-appearance: none; /* Remove default arrow in Webkit browsers */
+    -moz-appearance: none; /* Remove default arrow in Firefox */
+    appearance: none; /* Remove default arrow */
+    cursor: pointer; /* Ensure it looks clickable */
+    display: block; /* Make it block level */
+    width: 100%; /* Force it to occupy the full width */
+    margin: 5px 0; /* Provide margin to match other buttons */
+    text-align: left; /* Align the text inside to the left */
+}
+
+/* To hide the default arrow for Internet Explorer */
+#fileDropdown::-ms-expand {
+    display: none;
+}
+
+/* You might want to add a custom arrow indicator */
+#fileDropdown:after {
+    content: '\25BC';
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    pointer-events: none;
+    color: white;
+}
+
+/* Additional styles for the setting container to position the after content properly */
+.setting {
+    position: relative;
+}
+
+
+
 /* Responsive Styles */
 @media (max-width: 768px) {
     .setting-name {
