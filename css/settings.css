@@ -209,14 +209,6 @@ body, html {
         transform: translateX(0);
     }
 
-    .menu-tab {
-        top: 45%; /* Adjust to keep the tab centered */
-        right: -25px; /* Make tab more prominent on small screens */
-        width: 30px;
-        height: 60px; /* Adjust the height of the tab */
-        line-height: 50px; /* Adjust line height to center the icon vertically */
-    }
-
     .setting-name {
         display: block; /* Stack the name above the input on small screens */
         margin-right: 0;
