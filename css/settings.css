@@ -59,11 +59,13 @@ body, html {
     justify-content: space-between; /* Spaces the child elements between start and end */
     align-items: center; /* Aligns items vertically in the center */
     margin-bottom: 10px;
-    background-color: #222;
+    background-color: #035963;
     padding: 10px;
     color: white;
     font-size: 15px;
+    border-radius: 45; /* Ensures corners are flat */
 }
+
 
 .setting-name {
     /* Adjustments for the setting name if necessary */
@@ -101,7 +103,7 @@ body, html {
 }
 
 .file-upload-btn:hover {
-    background-color: black;
+    background-color: rgb(14, 101, 56);
     color: white; /* Changes text color to blue on hover */
     cursor: pointer; /* Ensures cursor changes to a pointer */
 }
