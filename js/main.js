@@ -70,7 +70,6 @@ function bindEventListeners() {
     document.getElementById('clearSceneButton').addEventListener('click', clearScene);
 
     // Mouse Positions - Delete Spheres
-    window.addEventListener('resize', onWindowResize, false);
     window.addEventListener('keydown', onKeyPress, false);
     document.addEventListener('keydown', toggleControls, false); // Listen for 'keydown' to toggle controls
 }
@@ -299,7 +298,9 @@ function updateSpheres() {
     scene.traverse((object) => {
         if (object.isSphere) {
             object.geometry.dispose(); // Dispose of the old sphere geometry
-            object.geometry = newSphereGeometry; // Assign the new sphere geometry
+            // Assign a unique copy of the new geometry to avoid shared
+            // references which could be disposed multiple times
+            object.geometry = newSphereGeometry.clone();
 
             // Update the scale of the outline mesh if it exists
             if (object.outlineMesh) {
